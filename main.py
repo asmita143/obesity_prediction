@@ -51,7 +51,7 @@ z_df = pd.DataFrame(z_scores, columns=numeric_cols.columns)
 # Find rows where any z-score is above 3 or below -3
 outliers = df[(abs(z_df) > 3).any(axis=1)]
 
-print(f"🚨 Found {len(outliers)} outliers using Z-score method:\n")
+print(f"Found {len(outliers)} outliers using Z-score method:\n")
 print(outliers)
 
 # Get minimum and maximum values
@@ -131,55 +131,55 @@ plt.legend(title='Obesity Category', bbox_to_anchor=(1.05, 1), loc='upper left')
 plt.tight_layout()
 plt.show()
 
-# Prepare the dataset for Linear Regression
+# Preparing the dataset for Linear Regression
 features = df[['FAF', 'FCVC', 'CH2O', 'TUE', 'MTRANS']]
 target = df['BMI']  # Now using the calculated BMI
 
 # One-hot encode the 'MTRANS' column (categorical)
 features = pd.get_dummies(features, columns=['MTRANS'], drop_first=True)
 
-# Split the dataset into training and testing sets
+# Spliting the dataset into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
 
-# Initialize and train the model
+# Initializing and training the model
 model = LinearRegression()
 model.fit(X_train, y_train)
 
-# Make predictions
+# Making predictions
 y_pred = model.predict(X_test)
 
-# Evaluate the model
+# Evaluating the model
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 
 print("\nMean Squared Error:", mse)
 print("R² Score:", r2)
 
-# Get the coefficients for the features
+# Getting the coefficients for the features
 coefficients = pd.DataFrame(model.coef_, X_train.columns, columns=['Coefficient'])
 print("\nModel Coefficients:\n", coefficients)
 
-# Show intercept
+# Showing intercept
 print("\nModel Intercept:", model.intercept_)
 
-# Example: Predict BMI for a new person
+
 new_data = {
-    'FAF': [1],        # Example values for features
+    'FAF': [1],    
     'FCVC': [2], 
     'CH2O': [2],
     'TUE': [3],
-    'MTRANS_Walking': [1],  # Example encoding of 'MTRANS'
-    'MTRANS_Bike': [0],     # Other modes of transportation need to be 0 (if not selected)
+    'MTRANS_Walking': [1],  
+    'MTRANS_Bike': [0],     
     'MTRANS_Motorbike': [0],
     'MTRANS_Public_Transportation': [0]
 }
-# Convert to DataFrame
+# Converting to DataFrame
 new_df = pd.DataFrame(new_data)
 
-# Ensure the columns are in the correct order
+# Ensuring the columns are in the correct order
 new_df = new_df[X_train.columns]
 
-# Now make the prediction with the model
+# making the prediction with the model
 predicted_bmi = model.predict(new_df)
 
 # Output the predicted BMI
